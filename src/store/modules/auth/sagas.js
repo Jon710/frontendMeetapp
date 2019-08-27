@@ -5,6 +5,7 @@ import history from '../../../services/history';
 import api from '../../../services/api';
 
 import { signInSuccess, signFailure } from './actions';
+import { meetUpListRequest } from '../meetup/actions';
 
 export function* signIn({ payload }) {
   try {
@@ -20,6 +21,7 @@ export function* signIn({ payload }) {
     api.defaults.headers.authorization = `Bearer ${token}`;
 
     yield put(signInSuccess(token, user));
+    yield put(meetUpListRequest());
 
     history.push('/dashboard');
   } catch (err) {

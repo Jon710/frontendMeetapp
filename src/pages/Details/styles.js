@@ -1,53 +1,62 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
-  max-width: 900px;
-  margin: 50px auto;
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+`;
 
-  display: flex;
-  flex-direction: column;
-
-  header {
+export const Content = styled.div`
+  div.image {
+    width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    strong {
-      color: #eee;
-      font-size: 24px;
-      margin: 0 15px;
-    }
-
-    aside {
-      display: flex;
-      align-items: center;
-      align-self: center;
-      padding: 20px;
-      width: 20%;
-      margin-left: 50px;
-      font-weight: bold;
-    }
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    box-shadow: 0 0px 15px rgba(113, 89, 193, 0.5);
   }
-
-  h1 {
-    color: #eee;
-    font-size: 20px;
-    margin-left: 150px;
-    margin-top: 20px;
-    font-weight: normal;
-  }
-
-  h2 {
-    color: #666;
-    font-size: 15px;
-    margin-left: 150px;
-    font-weight: normal;
-  }
-
   img {
-    align-self: center;
-    height: 200px;
-    width: 600px;
-    border-radius: 2%;
+    height: 300px;
   }
+  time {
+    font-size: 16px;
+    line-height: 19px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+  }
+  local {
+    font-size: 16px;
+    line-height: 19px;
+    color: #fff;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+  }
+  ${props =>
+    props.canceled &&
+    css`
+      opacity: 0.5;
+    `}
+`;
+export const Title = styled.div`
+  font-size: 32px;
+  line-height: 37px;
+  color: #fff;
+  font-weight: bold;
+  margin: 50px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+export const Description = styled.div`
+  margin: 25px 0px 30px;
+  padding: 10px 15px;
+  width: 100%;
+  height: 128px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  font-size: 18px;
+  line-height: 32px;
+  color: #fff;
 `;

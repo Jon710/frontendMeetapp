@@ -25,3 +25,15 @@ export const Container = styled.div`
     }
   }
 `;
+
+export const SelectImage = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  strong {
+    font-size: 20px;
+    line-height: 23px;
+    color: rgba(255, 255, 255, 0.3);
+  }
+`;

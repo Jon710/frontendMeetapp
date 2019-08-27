@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useField } from '@rocketseat/unform';
-import { MdAddAPhoto } from 'react-icons/md';
+import { MdCamera } from 'react-icons/md';
 import api from '../../../services/api';
 
-import { Container } from './styles';
+import { Container, SelectImage } from './styles';
 
 export default function ImageInput() {
-  const { defaultValue, registerField } = useField('image');
+  const { defaultValue, registerField } = useField('File');
 
   const [file, setFile] = useState(defaultValue && defaultValue.id);
-  // const [preview, setPreview] = useState(defaultValue && defaultValue.url);
+  const [preview, setPreview] = useState(defaultValue && defaultValue.url);
 
   const ref = useRef();
 
@@ -30,21 +30,27 @@ export default function ImageInput() {
 
     const response = await api.post('files', data);
 
-    const { id } = response.data;
+    const { id, url } = response.data;
 
     setFile(id);
-    // setPreview(url);
+    setPreview(url);
   }
 
   return (
     <Container>
-      <label htmlFor="image">
-        <MdAddAPhoto size={100} />
-        <img src="" alt="" />
+      <label htmlFor="file_id">
+        {preview ? (
+          <img src={preview} alt="Selecionar Imagem" />
+        ) : (
+          <SelectImage>
+            <MdCamera size={60} color="rgba(255, 255, 255, 0.3)" />
+            <strong>Selecionar Imagem</strong>
+          </SelectImage>
+        )}
 
         <input
           type="file"
-          id="avatar"
+          id="file_id"
           accept="image/*"
           data-file={file}
           onChange={handleChange}

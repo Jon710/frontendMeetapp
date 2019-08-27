@@ -1,68 +1,67 @@
-import React, { useEffect, useState } from 'react';
-
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from '@rocketseat/unform';
-import { toast } from 'react-toastify';
-import { format, parseISO } from 'date-fns';
-import pt from 'date-fns/locale/pt';
-import history from '../../services/history';
-import 'react-datepicker/dist/react-datepicker.css';
-import api from '../../services/api';
-import { updateDetailsRequest } from '../../store/modules/user/actions';
-
-// import ImageInput from './ImageInput';
+import { MdAddCircleOutline } from 'react-icons/md';
+import PropTypes from 'prop-types';
+import { parseISO } from 'date-fns';
 
 import { Container } from './styles';
 
-export default function NewMeetup() {
-  const objMeetup = useSelector(state => state.user);
+import SelectDate from './DatePicker';
+import ImageInput from './ImageInput';
+
+import {
+  createMeetUpRequest,
+  upDateMeetUpRequest,
+} from '../../store/modules/meetup/actions';
+
+export default function NewMeetups({ history }) {
   const dispatch = useDispatch();
+  const meetups = useSelector(state => state.meetup.meetups);
 
-  const [meetup, setMeetup] = useState([]);
-  useEffect(() => {
-    async function loadMeetup() {
-      try {
-        const response = await api.get(`meetups/${objMeetup.meetup}`);
-        console.tron.log(response.data);
+  const [date, setDate] = useState();
 
-        setMeetup({
-          ...response.data,
-          id: objMeetup.meetup,
-          url: response.data.imgMeetup.url,
-          formattedDate: format(
-            parseISO(response.data.date),
-            "d 'de' MMMM', às' HH':'mm",
-            {
-              locale: pt,
-            }
-          ),
-        });
-      } catch (err) {
-        toast.error('Erro ao editar');
-        history.push('/details');
-      }
-    }
+  const { state } = history.location;
+  let meetupInfos;
 
-    loadMeetup();
-  }, [objMeetup.meetup]);
+  if (state) {
+    const { meetup_id } = history.location.state;
+    meetupInfos = meetups.find(meetup => meetup.id === meetup_id);
+    meetupInfos.date = parseISO(meetupInfos.date);
+  }
 
-  function handleSubmit(data) {
-    console.tron.log('oi');
-    dispatch(updateDetailsRequest(data));
+  function handleNewMeetup(data) {
+    dispatch(createMeetUpRequest(data));
+  }
+
+  function handleUpdateMeetup(data) {
+    dispatch(upDateMeetUpRequest(data, meetupInfos));
   }
 
   return (
     <Container>
-      <Form initialData={meetup} onSubmit={handleSubmit}>
-        {/* <ImageInput name="file_id" src={meetup.url} /> */}
-        <Input name="title" placeholder="Titulo do meetup" />
-        <Input name="id" hidden />
-        <Input name="description" placeholder="Descrição" />
-        <Input name="date" type="date" placeholder="Data" />
-        <Input name="location" placeholder="Localização" />
-
-        <button type="submit">Salvar meetup</button>
+      <Form
+        onSubmit={
+          meetupInfos === undefined ? handleNewMeetup : handleUpdateMeetup
+        }
+        initialData={meetupInfos}
+        autoComplete="off"
+      >
+        <ImageInput name="file_id" />
+        <Input placeholder="Titulo" name="title" />
+        <Input multiline placeholder="Descrição" name="description" />
+        <Input placeholder="Localização" name="location" />
+        <SelectDate selected={date} setSelected={setDate} name="date" />
+        <button type="submit">
+          <MdAddCircleOutline size={20} color="#fff" />
+          Salvar Meetup
+        </button>
       </Form>
     </Container>
   );
 }
+
+NewMeetups.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  history: PropTypes.object.isRequired,
+};
